@@ -129,23 +129,12 @@ export default abstract class BaseDistribution {
   }
 
   protected async downloadNodejs(info: INodeVersionInfo) {
-    // Create temporary folder to download to
-    const tempDownloadFolder = `temp_${uuidv4()}`;
-    const tempDirectory = process.env['RUNNER_TEMP'] || '';
-    assert.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
-    const tempDir: string = path.join(tempDirectory, tempDownloadFolder);
-
-    const path1 =
-      this.osPlat == 'win32'
-        ? path.join(tempDir, path.basename(info.downloadUrl))
-        : undefined;
-
     let downloadPath = '';
     core.info(
       `Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`
     );
     try {
-      downloadPath = await tc.downloadTool(info.downloadUrl, path1);
+      downloadPath = await tc.downloadTool(info.downloadUrl);
     } catch (err) {
       if (
         err instanceof tc.HTTPError &&
@@ -237,10 +226,13 @@ export default abstract class BaseDistribution {
       //
       // For default PowerShell Windows it should contain extension type to unpack it.
       if (extension === '.zip') {
+        core.info(`Downloading only node binary from testttttttt`);
+
         const renamedArchive = `${downloadPath}.zip`;
         fs.renameSync(downloadPath, renamedArchive);
         extPath = await tc.extractZip(renamedArchive);
       } else {
+        core.info(`Downloading only node binary from testttttttt2`);
         const _7zPath = path.join(__dirname, '../..', 'externals', '7zr.exe');
         extPath = await tc.extract7z(downloadPath, undefined, _7zPath);
       }
