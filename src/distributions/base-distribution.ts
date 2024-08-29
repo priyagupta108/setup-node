@@ -129,12 +129,23 @@ export default abstract class BaseDistribution {
   }
 
   protected async downloadNodejs(info: INodeVersionInfo) {
+    // Create temporary folder to download to
+    const tempDownloadFolder = `temp_${uuidv4()}`;
+    const tempDirectory = process.env['RUNNER_TEMP'] || '';
+    assert.ok(tempDirectory, 'Expected RUNNER_TEMP to be defined');
+    const tempDir: string = path.join(tempDirectory, tempDownloadFolder);
+
+    const path1 =
+      this.osPlat == 'win32'
+        ? path.join(tempDir, path.basename(info.downloadUrl))
+        : undefined;
+
     let downloadPath = '';
     core.info(
       `Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`
     );
     try {
-      downloadPath = await tc.downloadTool(info.downloadUrl);
+      downloadPath = await tc.downloadTool(info.downloadUrl, path1);
     } catch (err) {
       if (
         err instanceof tc.HTTPError &&
