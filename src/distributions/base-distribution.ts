@@ -219,27 +219,18 @@ export default abstract class BaseDistribution {
     let extPath: string;
     info = info || ({} as INodeVersionInfo); // satisfy compiler, never null when reaches here
     if (this.osPlat == 'win32') {
-      const extension = this.nodeInfo.arch === 'arm642' ? '.zip' : '.7z';
+      core.info(`Downloading only node binary from ${info} ${this.nodeInfo}`);
+      const extension = this.nodeInfo.arch === 'arm64' ? '.zip' : '.7z';
       // Rename archive to add extension because after downloading
       // archive does not contain extension type and it leads to some issues
       // on Windows runners without PowerShell Core.
       //
       // For default PowerShell Windows it should contain extension type to unpack it.
       if (extension === '.zip') {
-        core.info(
-          `Downloading only node binary from testttttttt: ${downloadPath}`
-        );
-
         const renamedArchive = `${downloadPath}.zip`;
         fs.renameSync(downloadPath, renamedArchive);
-        core.info(
-          `Downloading only node binary from renamedArchive: ${renamedArchive}`
-        );
         extPath = await tc.extractZip(renamedArchive);
-
-        core.info(`Downloading only node binary from renamedArchive:fail`);
       } else {
-        core.info(`Downloading only node binary from testttttttt2`);
         const _7zPath = path.join(__dirname, '../..', 'externals', '7zr.exe');
         extPath = await tc.extract7z(downloadPath, undefined, _7zPath);
       }
