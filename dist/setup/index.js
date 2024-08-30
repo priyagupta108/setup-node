@@ -93871,9 +93871,14 @@ class BaseDistribution {
     downloadNodejs(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let downloadPath = '';
+            const isWindows = os_1.default.platform() === 'win32';
+            const tempDir = process.env.RUNNER_TEMP || '.';
+            const fileName = isWindows
+                ? path.join(tempDir, info.downloadUrl)
+                : undefined;
             core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
             try {
-                downloadPath = yield tc.downloadTool(info.downloadUrl);
+                downloadPath = yield tc.downloadTool(info.downloadUrl, fileName);
             }
             catch (err) {
                 if (err instanceof tc.HTTPError &&
@@ -93952,9 +93957,8 @@ class BaseDistribution {
                     core.info(`Downloading only node binary from testttttttt: ${downloadPath}`);
                     const renamedArchive = `${downloadPath}.zip`;
                     fs_1.default.renameSync(downloadPath, renamedArchive);
-                    const pythonPath = yield tc.downloadTool(downloadPath, renamedArchive);
                     core.info(`Downloading only node binary from renamedArchive: ${renamedArchive}`);
-                    extPath = yield tc.extractZip(pythonPath);
+                    extPath = yield tc.extractZip(downloadPath);
                     core.info(`Downloading only node binary from renamedArchive:fail`);
                 }
                 else {

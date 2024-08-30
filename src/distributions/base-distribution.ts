@@ -130,11 +130,16 @@ export default abstract class BaseDistribution {
 
   protected async downloadNodejs(info: INodeVersionInfo) {
     let downloadPath = '';
+    const isWindows = os.platform() === 'win32';
+    const tempDir = process.env.RUNNER_TEMP || '.';
+    const fileName = isWindows
+      ? path.join(tempDir, info.downloadUrl)
+      : undefined;
     core.info(
       `Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`
     );
     try {
-      downloadPath = await tc.downloadTool(info.downloadUrl);
+      downloadPath = await tc.downloadTool(info.downloadUrl, fileName);
     } catch (err) {
       if (
         err instanceof tc.HTTPError &&
@@ -232,11 +237,10 @@ export default abstract class BaseDistribution {
 
         const renamedArchive = `${downloadPath}.zip`;
         fs.renameSync(downloadPath, renamedArchive);
-        const pythonPath = await tc.downloadTool(downloadPath, renamedArchive);
         core.info(
           `Downloading only node binary from renamedArchive: ${renamedArchive}`
         );
-        extPath = await tc.extractZip(pythonPath);
+        extPath = await tc.extractZip(downloadPath);
 
         core.info(`Downloading only node binary from renamedArchive:fail`);
       } else {
