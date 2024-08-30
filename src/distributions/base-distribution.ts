@@ -150,7 +150,7 @@ export default abstract class BaseDistribution {
       throw err;
     }
 
-    const toolPath = await this.extractArchive(downloadPath, info);
+    const toolPath = await this.extractArchive(downloadPath, info, false);
     core.info('Done');
 
     return toolPath;
@@ -210,7 +210,8 @@ export default abstract class BaseDistribution {
 
   protected async extractArchive(
     downloadPath: string,
-    info: INodeVersionInfo | null
+    info: INodeVersionInfo | null,
+    official?: boolean
   ) {
     //
     // Extract
@@ -219,7 +220,10 @@ export default abstract class BaseDistribution {
     let extPath: string;
     info = info || ({} as INodeVersionInfo); // satisfy compiler, never null when reaches here
     if (this.osPlat == 'win32') {
-      core.info(`Downloading only node binary from ${info} ${this.nodeInfo}`);
+      const infotest = info;
+      core.info(
+        `Downloading only node binary from ${infotest} ${infotest.fileName} ${infotest.downloadUrl} ${infotest.resolvedVersion} ${official} `
+      );
       const extension = this.nodeInfo.arch === 'arm64' ? '.zip' : '.7z';
       // Rename archive to add extension because after downloading
       // archive does not contain extension type and it leads to some issues

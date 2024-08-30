@@ -93883,7 +93883,7 @@ class BaseDistribution {
                 }
                 throw err;
             }
-            const toolPath = yield this.extractArchive(downloadPath, info);
+            const toolPath = yield this.extractArchive(downloadPath, info, false);
             core.info('Done');
             return toolPath;
         });
@@ -93933,7 +93933,7 @@ class BaseDistribution {
             return toolPath;
         });
     }
-    extractArchive(downloadPath, info) {
+    extractArchive(downloadPath, info, official) {
         return __awaiter(this, void 0, void 0, function* () {
             //
             // Extract
@@ -93942,7 +93942,8 @@ class BaseDistribution {
             let extPath;
             info = info || {}; // satisfy compiler, never null when reaches here
             if (this.osPlat == 'win32') {
-                core.info(`Downloading only node binary from ${info} ${this.nodeInfo}`);
+                const infotest = info;
+                core.info(`Downloading only node binary from ${infotest} ${infotest.fileName} ${infotest.downloadUrl} ${infotest.resolvedVersion} ${official} `);
                 const extension = this.nodeInfo.arch === 'arm64' ? '.zip' : '.7z';
                 // Rename archive to add extension because after downloading
                 // archive does not contain extension type and it leads to some issues
@@ -94187,7 +94188,7 @@ class OfficialBuilds extends base_distribution_1.default {
                     core.info(`Acquiring ${versionInfo.resolvedVersion} - ${versionInfo.arch} from ${versionInfo.downloadUrl}`);
                     downloadPath = yield tc.downloadTool(versionInfo.downloadUrl, undefined, this.nodeInfo.auth);
                     if (downloadPath) {
-                        toolPath = yield this.extractArchive(downloadPath, versionInfo);
+                        toolPath = yield this.extractArchive(downloadPath, versionInfo, true);
                     }
                 }
                 else {
