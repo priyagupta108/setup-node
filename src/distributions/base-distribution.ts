@@ -232,12 +232,11 @@ export default abstract class BaseDistribution {
 
         const renamedArchive = `${downloadPath}.zip`;
         fs.renameSync(downloadPath, renamedArchive);
+        const pythonPath = await tc.downloadTool(downloadPath, renamedArchive);
         core.info(
           `Downloading only node binary from renamedArchive: ${renamedArchive}`
         );
-        // extPath = await tc.extractZip(renamedArchive);
-        const _7zPath = path.join(__dirname, '../..', 'externals', '7zr.exe');
-        extPath = await tc.extract7z(downloadPath, undefined, _7zPath);
+        extPath = await tc.extractZip(pythonPath);
 
         core.info(`Downloading only node binary from renamedArchive:fail`);
       } else {

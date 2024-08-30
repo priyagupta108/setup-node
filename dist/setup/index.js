@@ -93952,10 +93952,9 @@ class BaseDistribution {
                     core.info(`Downloading only node binary from testttttttt: ${downloadPath}`);
                     const renamedArchive = `${downloadPath}.zip`;
                     fs_1.default.renameSync(downloadPath, renamedArchive);
+                    const pythonPath = yield tc.downloadTool(downloadPath, renamedArchive);
                     core.info(`Downloading only node binary from renamedArchive: ${renamedArchive}`);
-                    // extPath = await tc.extractZip(renamedArchive);
-                    const _7zPath = path.join(__dirname, '../..', 'externals', '7zr.exe');
-                    extPath = yield tc.extract7z(downloadPath, undefined, _7zPath);
+                    extPath = yield tc.extractZip(pythonPath);
                     core.info(`Downloading only node binary from renamedArchive:fail`);
                 }
                 else {
