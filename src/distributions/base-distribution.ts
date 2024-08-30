@@ -240,7 +240,7 @@ export default abstract class BaseDistribution {
         core.info(
           `Downloading only node binary from renamedArchive: ${renamedArchive}`
         );
-        extPath = await tc.extractZip(downloadPath);
+        extPath = await tc.extractZip(renamedArchive);
 
         core.info(`Downloading only node binary from renamedArchive:fail`);
       } else {
