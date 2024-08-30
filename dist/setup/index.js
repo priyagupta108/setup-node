@@ -93883,7 +93883,7 @@ class BaseDistribution {
                 }
                 throw err;
             }
-            const toolPath = yield this.extractArchive(downloadPath, info, false);
+            const toolPath = yield this.extractArchive(downloadPath, info, true);
             core.info('Done');
             return toolPath;
         });
@@ -93933,7 +93933,7 @@ class BaseDistribution {
             return toolPath;
         });
     }
-    extractArchive(downloadPath, info, official) {
+    extractArchive(downloadPath, info, isFallBack) {
         return __awaiter(this, void 0, void 0, function* () {
             //
             // Extract
@@ -93943,14 +93943,14 @@ class BaseDistribution {
             info = info || {}; // satisfy compiler, never null when reaches here
             if (this.osPlat == 'win32') {
                 const infotest = info;
-                core.info(`Downloading only node binary from ${infotest} ${infotest.fileName} ${infotest.downloadUrl} ${infotest.resolvedVersion} ${official} `);
+                core.info(`Downloading only node binary from  ${infotest.downloadUrl} ${isFallBack} `);
                 const extension = this.nodeInfo.arch === 'arm64' ? '.zip' : '.7z';
                 // Rename archive to add extension because after downloading
                 // archive does not contain extension type and it leads to some issues
                 // on Windows runners without PowerShell Core.
                 //
                 // For default PowerShell Windows it should contain extension type to unpack it.
-                if (extension === '.zip') {
+                if (extension === '.zip' && isFallBack) {
                     const renamedArchive = `${downloadPath}.zip`;
                     fs_1.default.renameSync(downloadPath, renamedArchive);
                     extPath = yield tc.extractZip(renamedArchive);
@@ -94188,7 +94188,7 @@ class OfficialBuilds extends base_distribution_1.default {
                     core.info(`Acquiring ${versionInfo.resolvedVersion} - ${versionInfo.arch} from ${versionInfo.downloadUrl}`);
                     downloadPath = yield tc.downloadTool(versionInfo.downloadUrl, undefined, this.nodeInfo.auth);
                     if (downloadPath) {
-                        toolPath = yield this.extractArchive(downloadPath, versionInfo, true);
+                        toolPath = yield this.extractArchive(downloadPath, versionInfo, false);
                     }
                 }
                 else {
