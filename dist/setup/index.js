@@ -93871,14 +93871,9 @@ class BaseDistribution {
     downloadNodejs(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let downloadPath = '';
-            const isWindows = os_1.default.platform() === 'win32';
-            const tempDir = process.env.RUNNER_TEMP || '.';
-            const fileName = isWindows
-                ? path.join(tempDir, info.downloadUrl)
-                : undefined;
             core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
             try {
-                downloadPath = yield tc.downloadTool(info.downloadUrl, fileName);
+                downloadPath = yield tc.downloadTool(info.downloadUrl);
             }
             catch (err) {
                 if (err instanceof tc.HTTPError &&
@@ -93947,7 +93942,7 @@ class BaseDistribution {
             let extPath;
             info = info || {}; // satisfy compiler, never null when reaches here
             if (this.osPlat == 'win32') {
-                const extension = this.nodeInfo.arch === 'arm64' ? '.zip' : '.7z';
+                const extension = this.nodeInfo.arch === 'arm642' ? '.zip' : '.7z';
                 // Rename archive to add extension because after downloading
                 // archive does not contain extension type and it leads to some issues
                 // on Windows runners without PowerShell Core.
