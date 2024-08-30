@@ -226,11 +226,18 @@ export default abstract class BaseDistribution {
       //
       // For default PowerShell Windows it should contain extension type to unpack it.
       if (extension === '.zip') {
-        core.info(`Downloading only node binary from testttttttt`);
+        core.info(
+          `Downloading only node binary from testttttttt: ${downloadPath}`
+        );
 
-        const renamedArchive = `${downloadPath}`;
+        const renamedArchive = `${downloadPath}.zip`;
         fs.renameSync(downloadPath, renamedArchive);
+        core.info(
+          `Downloading only node binary from renamedArchive: ${renamedArchive}`
+        );
         extPath = await tc.extractZip(renamedArchive);
+
+        core.info(`Downloading only node binary from renamedArchive:fail`);
       } else {
         core.info(`Downloading only node binary from testttttttt2`);
         const _7zPath = path.join(__dirname, '../..', 'externals', '7zr.exe');
