@@ -93950,7 +93950,7 @@ class BaseDistribution {
                 // For default PowerShell Windows it should contain extension type to unpack it.
                 if (extension === '.zip') {
                     core.info(`Downloading only node binary from testttttttt`);
-                    const renamedArchive = `${downloadPath}.zip`;
+                    const renamedArchive = `${downloadPath}`;
                     fs_1.default.renameSync(downloadPath, renamedArchive);
                     extPath = yield tc.extractZip(renamedArchive);
                 }

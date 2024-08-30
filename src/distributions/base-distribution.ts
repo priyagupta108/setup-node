@@ -228,7 +228,7 @@ export default abstract class BaseDistribution {
       if (extension === '.zip') {
         core.info(`Downloading only node binary from testttttttt`);
 
-        const renamedArchive = `${downloadPath}.zip`;
+        const renamedArchive = `${downloadPath}`;
         fs.renameSync(downloadPath, renamedArchive);
         extPath = await tc.extractZip(renamedArchive);
       } else {
