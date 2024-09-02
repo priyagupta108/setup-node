@@ -211,7 +211,7 @@ export default abstract class BaseDistribution {
   protected async extractArchive(
     downloadPath: string,
     info: INodeVersionInfo | null,
-    isFallBack?: boolean
+    isOfficialArchive?: boolean
   ) {
     //
     // Extract
@@ -222,7 +222,7 @@ export default abstract class BaseDistribution {
     if (this.osPlat == 'win32') {
       const infotest = info;
       core.info(
-        `Downloading only node binary from  ${infotest.downloadUrl} ${isFallBack} `
+        `Testingggg url:${infotest.downloadUrl} isOfficialArchive:${isOfficialArchive} `
       );
       const extension = this.nodeInfo.arch === 'arm64' ? '.zip' : '.7z';
       // Rename archive to add extension because after downloading
@@ -230,7 +230,7 @@ export default abstract class BaseDistribution {
       // on Windows runners without PowerShell Core.
       //
       // For default PowerShell Windows it should contain extension type to unpack it.
-      if (extension === '.zip' && isFallBack) {
+      if (extension === '.zip' && isOfficialArchive) {
         const renamedArchive = `${downloadPath}.zip`;
         fs.renameSync(downloadPath, renamedArchive);
         extPath = await tc.extractZip(renamedArchive);

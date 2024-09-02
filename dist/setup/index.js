@@ -93933,7 +93933,7 @@ class BaseDistribution {
             return toolPath;
         });
     }
-    extractArchive(downloadPath, info, isFallBack) {
+    extractArchive(downloadPath, info, isOfficialArchive) {
         return __awaiter(this, void 0, void 0, function* () {
             //
             // Extract
@@ -93943,14 +93943,14 @@ class BaseDistribution {
             info = info || {}; // satisfy compiler, never null when reaches here
             if (this.osPlat == 'win32') {
                 const infotest = info;
-                core.info(`Downloading only node binary from  ${infotest.downloadUrl} ${isFallBack} `);
+                core.info(`Testingggg url:${infotest.downloadUrl} isOfficialArchive:${isOfficialArchive} `);
                 const extension = this.nodeInfo.arch === 'arm64' ? '.zip' : '.7z';
                 // Rename archive to add extension because after downloading
                 // archive does not contain extension type and it leads to some issues
                 // on Windows runners without PowerShell Core.
                 //
                 // For default PowerShell Windows it should contain extension type to unpack it.
-                if (extension === '.zip' && isFallBack) {
+                if (extension === '.zip' && isOfficialArchive) {
                     const renamedArchive = `${downloadPath}.zip`;
                     fs_1.default.renameSync(downloadPath, renamedArchive);
                     extPath = yield tc.extractZip(renamedArchive);
