@@ -294,13 +294,13 @@ describe('main tests', () => {
       const readFileSpy = jest.spyOn(fs, 'readFileSync');
       readFileSpy.mockImplementation(() =>
         JSON.stringify({
-          packageManager: 'yarn@3.2.0'
+          packageManager: 'npm@10.8.2'
         })
       );
 
       await main.run();
 
-      expect(saveStateSpy).toHaveBeenCalledWith(expect.anything(), 'yarn');
+      expect(saveStateSpy).toHaveBeenCalledWith(expect.anything(), 'npm');
     });
 
     it('Should not enable caching if the packageManager field is missing in package.json and the cache input is not provided', async () => {
