@@ -204,7 +204,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 'v24.0.0-nightly202505066102159fa1'
+          node-version: '24.0.0-nightly202505066102159fa1'
       - run: npm ci
       - run: npm test
 ```
@@ -222,12 +222,12 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 'v24.0.0-rc.4'
+          node-version: '24.0.0-rc.4'
       - run: npm ci
       - run: npm test
 ```
 
-**Note:** Unlike nightly versions, which support version range specifiers, you must specify the exact version for a release candidate: `v24.0.0-rc.4`.
+**Note:** Unlike nightly versions, which support version range specifiers, you must specify the exact version for a release candidate: `24.0.0-rc.4`.
 
 ## Caching packages data
 The action follows [actions/cache](https://github.com/actions/cache/blob/main/examples.md#node---npm) guidelines, and caches global cache on the machine instead of `node_modules`, so cache can be reused between different Node.js versions.
