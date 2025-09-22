@@ -288,6 +288,7 @@ describe('main tests', () => {
     it('Should enable caching with the resolved package manager from packageManager field in package.json when the cache input is not provided', async () => {
       inputs['package-manager-cache'] = 'true';
       inputs['cache'] = ''; // No cache input is provided
+      isCacheActionAvailable.mockImplementation(() => true);
 
       inSpy.mockImplementation(name => inputs[name]);
 
@@ -337,7 +338,7 @@ describe('main tests', () => {
       inputs['cache'] = 'npm'; // Explicit cache input provided
 
       inSpy.mockImplementation(name => inputs[name]);
-      isCacheActionAvailable.mockReturnValue(true);
+      isCacheActionAvailable.mockImplementation(() => true);
 
       await main.run();
 
