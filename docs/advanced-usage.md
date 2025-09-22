@@ -11,6 +11,7 @@ In order to get the most out of using your lockfile on continuous integration fo
 
 ### NPM
 
+
 Ensure that `package-lock.json` is always committed, use `npm ci` instead of `npm install` when installing packages.
 
 **See also:**
