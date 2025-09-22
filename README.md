@@ -67,8 +67,8 @@ See [action.yml](action.yml)
     # Default: ''
     cache: ''
 
-    # Used to disable automatic caching for npm if npm is specified as the package manager in package.json.
-    # By default, caching for npm is enabled if the packageManager field in package.json specifies npm and no cache input is provided.
+    # Controls automatic caching for npm. By default, caching for npm is enabled if the packageManager field in package.json specifies npm and no explicit cache input is provided.
+    # To disable automatic caching for npm, set package-manager-cache to false.
     # default: true
     package-manager-cache: true
 
