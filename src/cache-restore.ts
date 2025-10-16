@@ -24,15 +24,33 @@ export const restoreCache = async (
   const platform = process.env.RUNNER_OS;
   const arch = os.arch();
 
+  // Setup roots for searching dependency files
+  const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+  const actionPath = process.env.GITHUB_ACTION_PATH || '';
+
+  let roots: string[] = [workspace];
+  let allowFilesOutsideWorkspace = false;
+  if (actionPath) {
+    roots.push(actionPath);
+    allowFilesOutsideWorkspace = true;
+  }
+
   const cachePaths = await getCacheDirectories(
     packageManagerInfo,
     cacheDependencyPath
   );
   core.saveState(State.CachePaths, cachePaths);
+
+  // Support multiline/glob patterns for dependency path
   const lockFilePath = cacheDependencyPath
     ? cacheDependencyPath
     : findLockFile(packageManagerInfo);
-  const fileHash = await glob.hashFiles(lockFilePath);
+
+  // Hash files using multi-root logic
+  const fileHash = await glob.hashFiles(lockFilePath, workspace, {
+    roots,
+    allowFilesOutsideWorkspace
+  });
 
   if (!fileHash) {
     throw new Error(
