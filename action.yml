@@ -3,8 +3,8 @@ description: 'Setup a Node.js environment by adding problem matchers and optiona
 author: 'GitHub'
 inputs:
   always-auth:
-    description: 'Deprecated. Use node-version instead. Will not be supported after October 1, 2019'
-    deprecationMessage: 'The version property will not be supported after October 1, 2019. Use node-version instead'
+    description: 'Deprecated. Will not be supported after October 1, 2019'
+    deprecationMessage: 'The always-auth property will not be supported after October 1, 2019. Use node-version instead'
   node-version:
     description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
   node-version-file:
