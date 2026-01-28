@@ -1,6 +1,6 @@
 ## Working with lockfiles
 
-All supported package managers recommend that you **always** commit the lockfile, although implementations vary doing so generally provides the following benefits:
+Most supported package managers recommend that you **always** commit the lockfile, although implementations vary doing so generally provides the following benefits:
 
 - Enables faster installation for CI and production environments, due to being able to skip package resolution.
 - Describes a single representation of a dependency tree such that teammates, deployments, and continuous integration are guaranteed to install exactly the same dependencies.
@@ -35,6 +35,25 @@ Ensure that `pnpm-lock.yaml` is always committed, when on CI pass `--frozen-lock
 - [Working with Git - Lockfiles](https://pnpm.io/git#lockfiles)
 - [Documentation of `--frozen-lockfile` option](https://pnpm.io/cli/install#--frozen-lockfile)
 
+### Running without a lockfile
+
+If you choose not to use a lockfile, you must ensure that **caching is disabled**. The `cache` feature relies on the lockfile to generate a unique key for the cache entry.
+
+To run without a lockfile:
+1. Do not set the `cache` input.
+2. If your `package.json` contains a `packageManager` field set to npm (or devEngines.packageManager), automatic caching is enabled by default. Override this by setting `package-manager-cache: false`.
+
+```yaml
+steps:
+- uses: actions/checkout@v6
+- uses: actions/setup-node@v6
+  with:
+    node-version: '24'
+    package-manager-cache: false # Explicitly disable caching if you don't have a lockfile
+- run: npm install
+- run: npm test
+```
+
 ## Check latest version
 
 The `check-latest` flag defaults to `false`. When set to `false`, the action will first check the local cache for a semver match. If unable to find a specific version in the cache, the action will attempt to download a version of Node.js. It will pull LTS versions from [node-versions releases](https://github.com/actions/node-versions/releases) and on miss or failure will fall back to the previous behavior of downloading directly from [node dist](https://nodejs.org/dist/). Use the default or set `check-latest` to `false` if you prefer stability and if you want to ensure a specific version of Node.js is always used.
@@ -45,7 +64,7 @@ If `check-latest` is set to `true`, the action first checks if the cached versio
 
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version: '24'
@@ -63,7 +82,7 @@ See [supported version syntax](https://github.com/actions/setup-node#supported-v
 
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version-file: '.nvmrc'
@@ -97,7 +116,7 @@ jobs:
     runs-on: windows-latest
     name: Node sample
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
@@ -118,7 +137,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Node sample
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24.0.0-v8-canary' # it will install the latest v8 canary release for node 24.0.0
@@ -133,7 +152,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Node sample
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24-v8-canary' # it will install the latest v8 canary release for node 24
@@ -149,7 +168,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Node sample
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 'v24.0.0-v8-canary2025030537242e55ac'
@@ -169,7 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Node sample
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24-nightly' # it will install the latest nightly release for node 24
@@ -185,7 +204,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Node sample
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24.0.0-nightly' # it will install the latest nightly release for node 24.0.0
@@ -201,7 +220,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Node sample
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24.0.0-nightly202505066102159fa1'
@@ -219,7 +238,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Node sample
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '24.0.0-rc.4'
@@ -237,7 +256,7 @@ Yarn caching handles both Yarn Classic (v1) and Yarn Berry (v2, v3, v4+).
 
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version: '24'
@@ -256,7 +275,7 @@ steps:
 # NOTE: pnpm caching support requires pnpm version >= 6.10.0
 
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: pnpm/action-setup@v4
   with:
     version: 10
@@ -275,7 +294,7 @@ steps:
 **Using wildcard patterns to cache dependencies**
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version: '24'
@@ -288,7 +307,7 @@ steps:
 **Using a list of file paths to cache dependencies**
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version: '24'
@@ -308,10 +327,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       # Restore Node.js modules cache (restore-only)
       - name: Restore Node modules cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: cache-node-modules
         with:
           path: ~/.npm
@@ -354,7 +373,7 @@ jobs:
             architecture: x86
     name: Node ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -367,7 +386,7 @@ jobs:
 ## Publish to npmjs and GPR with npm
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version: '24.x'
@@ -387,7 +406,7 @@ steps:
 ## Publish to npmjs and GPR with yarn
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version: '24.x'
@@ -407,7 +426,7 @@ steps:
 ## Use private packages
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version: '24.x'
@@ -427,7 +446,7 @@ Below you can find a sample "Setup .yarnrc.yml" step, that is going to allow you
 
 ```yaml
 steps:
-- uses: actions/checkout@v5
+- uses: actions/checkout@v6
 - uses: actions/setup-node@v6
   with:
     node-version: '24.x'
@@ -445,9 +464,6 @@ steps:
 To access private GitHub Packages within the same organization, go to "Manage Actions access" in Package settings and set the repositories you want to access.
 
 Please refer to the [Ensuring workflow access to your package - Configuring a package's access control and visibility](https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#ensuring-workflow-access-to-your-package) for more details.
-
-### always-auth input
-The always-auth input sets `always-auth=true` in .npmrc file. With this option set [npm](https://docs.npmjs.com/cli/v6/using-npm/config#always-auth)/yarn sends the authentication credentials when making a request to the registries.
 
 ## Use private mirror
 
